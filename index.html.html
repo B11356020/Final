@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>KSP 個人專題 - RWD 網頁 (純 Bootstrap JS)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('ksp背景.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.603);
+            z-index: -1;
+        }
+
+        .navbar.bg-dark {
+            background-color: rgb(33, 37, 41) !important;
+            flex-shrink: 0;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgb(255, 255, 255);
+            font-size: 1.15rem;
+            transition: color 0.3s, background-color 0.3s;
+            border-radius: 5px;
+            padding: 8px 12px;
+        }
+
+        .navbar-nav .nav-link.active,
+        .navbar-nav .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar-nav .nav-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .navbar-brand img {
+            height: 60px;
+            max-width: 120px;
+        }
+
+        .name {
+            color: transparent;
+            -webkit-text-stroke: 2px #fff;
+            text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7);
+            font-size: 500%;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .homeC {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgb(0, 0, 0);
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .tab-pane {
+            display: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        /* 首頁內容區塊調整 */
+        #home-content.tab-pane.active {
+            padding-top: 0;
+        }
+
+        #home-content {
+            width: 100%;
+            max-width: 700px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0 auto;
+            color: rgb(27, 27, 26);
+        }
+
+        #home-content a {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #6441a5;
+            border-radius: 25px;
+            background-color: #9146ff;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #home-content a:hover {
+            background-color: #6441a5;
+            border-color: #9146ff;
+        }
+
+        /*介紹 卡片樣式 */
+        .card {
+            background-color: rgba(255, 255, 255, 0.884);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            width: 90%; 
+            max-width: 1000px;
+            margin: auto; 
+            border: 1px solid rgb(179, 180, 191);
+            color: rgb(27, 27, 26);
+            text-align: left;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .card-content {
+            display: flex;
+            align-items: stretch;
+            gap: 20px;
+            height: 100%;
+            flex-grow: 1; 
+        }
+
+        .card-text {
+            flex: 3; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-right: 20px; 
+        }
+
+        .card-text p {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #000000;
+            text-shadow: 1px 1px 2px rgba(89, 0, 255, 0.356);
+        }
+
+        .cardImg {
+            flex: 1; 
+            width: 50%;
+            height: 50%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 12px;
+            min-height: 200px;
+        }
+
+        .smallcard{
+            background-color: rgba(248, 248, 248, 0.534);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            margin: auto;
+            border: 1px solid rgb(179, 180, 191);
+            color: rgb(27, 27, 26);
+            display: flex; 
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* 定位參考點 */
+        .tab-pane {
+            display: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative;
+        }
+
+        .icon-container {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px; 
+            padding: 0 15px; 
+            max-width: 1000px; 
+        }
+
+        .icon {
+            background-color: rgba(255, 255, 255, 0.884);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden; 
+            transition: transform 0.2s ease-in-out; 
+            box-sizing: border-box;
+        }
+
+        .icon img {
+          display: block;
+          margin: auto;
+          width: 50%;
+          height: auto;
+          max-height: 50%;
+          object-fit: contain;
+          transition: transform 0.2s ease-in-out;
+        }
+
+        .icon:hover {
+            background-color: rgba(255, 255, 255, 0.699);
+        }
+
+        @media (max-width: 767px) {
+            .navbar-nav {
+                height: auto; 
+            }
+            .card {
+                width: 90%;
+                min-height: auto;
+                padding: 1.5rem;
+            }
+
+            .card-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cardImg {
+                width: 60%;
+                max-width: none;
+                height: auto;
+                border-radius: 12px; 
+                object-position: center;
+                margin: 0 auto;
+            }
+
+            .card-text {
+                padding-right: 0;
+            }
+
+            .card-text p {
+                font-size: 1rem;
+            }
+
+            .icon {
+                width: 100px;
+                height: 100px;
+                box-sizing: border-box; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="https://www.twitch.tv/kspksp/about" target="_blank">
+            <img src="logo.png" alt="KSP Logo" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0 nav nav-pills" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-content" type="button" role="tab" aria-controls="home-content" aria-selected="true">首頁</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="intro-tab" data-bs-toggle="tab" data-bs-target="#intro-content" type="button" role="tab" aria-controls="intro-content" aria-selected="false">介紹</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="features-tab" data-bs-toggle="tab" data-bs-target="#features-content" type="button" role="tab" aria-controls="features-content" aria-selected="false">聯絡</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="tab-content text-center py-4" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-content" role="tabpanel" aria-labelledby="home-tab">
+                <p class="name">KSP</p>
+                <p class="homeC">點選下面選項前往頻道</p>
+                <a href="https://www.twitch.tv/kspksp/about">twitch！</a>
+            </div>
+
+            <div class="tab-pane fade" id="intro-content" role="tabpanel" aria-labelledby="intro-tab">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-text">
+                          <p style="font-size: 3rem ;">KPS</p>
+                          <hr>
+                            <p>一個喜愛唱歌又愛玩遊戲的實況主，
+                              每週六固定唱歌台，其他日玩遊戲聊天等等。
+                              主要在Twitch上進行直播。</p>
+                        </div>
+                        <img src="人物.png" class="cardImg" alt="人物圖片">
+                    </div>
+                    <div>
+                      <p style="font-size: 2rem ;
+                      line-height: 2; ">經歷</p>
+                        <p style="font-size: 1rem ;">2013年因為朋友而接觸到ACG歌曲翻唱
+                            <br>2014年年初在Niconico投稿Letter Song，年中投稿歌に形はないけれど，後於2015年受Ayre Records邀請擔任高捷少女小穹形象主題曲的下一站·與你的CV，也為前進吧！高捷少女Initiating Station 的小穹進行配音，之後也受邀於其他主題曲擔任歌手，如拉普拉斯的神子的Chase Your Star
+                            <br>暫時成為一位一邊上班一邊擔任歌手及配音員的斜槓青年
+                            <br>2019年後再度活躍於網路上，於Twitch開實況並把工作辭掉，但直至2021年2月後被Zrush和哈瓜消費追隨人數才大幅成長至今。
+                            <br>2020.04.12成為Twitch合作夥伴
+                            <br>2021.12.25 新的虛擬形象初配信
+                            <br>2023.09.16 KSP 3.0衣裝
+                            <br>2024.09.16 五周年新衣裝
+                            <br>截至2025.06.13追隨人數已有17.5萬。
+                          </p>
+                    </div>
+                </div>
+                <p></p>
+            </div>
+
+            <div class="tab-pane fade" id="features-content" role="tabpanel" aria-labelledby="features-tab">
+                <p class="homeC">社群平台連結</p>
+
+                <div class="icon-container">
+                    <div class="icon">
+                        <a href="https://www.twitch.tv/yourchannel" target="_blank">
+                            <img src="twitch.svg" alt="Twitch" />
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="https://www.youtube.com/c/KSPKSP" target="_blank">
+                            <img src="youtube.svg" alt="YouTube" />
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="https://www.facebook.com/KSP0724" target="_blank">
+                            <img src="facebook.svg" alt="Facebook" />
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="https://www.instagram.com/kspksp0724/" target="_blank">
+                            <img src="instagram.svg" alt="Instagram" />
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="https://discord.com/invite/ccAbCq4" target="_blank">
+                            <img src="discord.svg" alt="Discord" />
+                        </a>
+                    </div>
+                    <div class="icon">
+                        <a href="https://x.com/KSPKSP01" target="_blank">
+                            <img src="x.svg" alt="Website" />
+                        </a>
+                    </div>
+                    </div>
+                    
+                    <p style="color: #fff;">e-mail ： kspksp81724@gmail.com</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
